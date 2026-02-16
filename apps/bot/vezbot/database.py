@@ -5,6 +5,9 @@ from sqlalchemy.orm import declarative_base
 
 from vezbot.config import settings
 from vezbot.models.base import Base
+from vezbot.utils.logging import get_logger, get_correlation_id, set_correlation_id
+
+logger = get_logger(__name__)
 
 # Create async engine
 engine = create_async_engine(
@@ -31,7 +34,10 @@ async def get_session():
 async def init_db() -> None:
     """Initialize database (create tables)."""
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        try:
+            await conn.run_sync(Base.metadata.create_all)
+        except Exception as e:
+            logger.error(f"Error creating tables: {e}")
 
 
 async def close_db() -> None:
