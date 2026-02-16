@@ -24,22 +24,34 @@ AsyncSessionLocal = async_sessionmaker(
 
 async def get_session():
     """Get async database session (generator for dependency injection)."""
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
+    try:
+        async with AsyncSessionLocal() as session:
+            try:
+                try:
+                    yield session
+                finally:
+                    await session.close()
+            except Exception as e:
+                logger.error(f"Session error: {e}")
+    except Exception as e:
+        logger.error(f"Database session error: {e}")
 
 
 async def init_db() -> None:
     """Initialize database (create tables)."""
-    async with engine.begin() as conn:
-        try:
-            await conn.run_sync(Base.metadata.create_all)
-        except Exception as e:
-            logger.error(f"Error creating tables: {e}")
+    try:
+        async with engine.begin() as conn:
+            try:
+                await conn.run_sync(Base.metadata.create_all)
+            except Exception as e:
+                logger.error(f"Error creating tables: {e}")
+    except Exception as e:
+        logger.error(f"Database connection error: {e}")
 
 
 async def close_db() -> None:
     """Close database connections."""
-    await engine.dispose()
+    try:
+        await engine.dispose()
+    except Exception as e:
+        logger.error(f"Error closing database: {e}")
