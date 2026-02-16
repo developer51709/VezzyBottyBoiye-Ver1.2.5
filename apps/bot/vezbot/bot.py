@@ -35,12 +35,30 @@ class Vezbot(commands.Bot):
         logger.info("Setting up bot...")
 
         # Load cogs
-        await self.load_extension("vezbot.cogs.setup")
-        await self.load_extension("vezbot.cogs.tickets")
-        await self.load_extension("vezbot.cogs.embeds")
-        await self.load_extension("vezbot.cogs.polls")
-        await self.load_extension("vezbot.cogs.reminders")
-        await self.load_extension("vezbot.cogs.admin")
+        try:
+            await self.load_extension("vezbot.cogs.setup")
+        except Exception as e:
+            logger.error(f"Failed to load setup cog: {e}")
+        try:
+            await self.load_extension("vezbot.cogs.tickets")
+        except Exception as e:
+            logger.error(f"Failed to load tickets cog: {e}")
+        try:
+            await self.load_extension("vezbot.cogs.embeds")
+        except Exception as e:
+            logger.error(f"Failed to load embeds cog: {e}")
+        try:
+            await self.load_extension("vezbot.cogs.polls")
+        except Exception as e:
+            logger.error(f"Failed to load polls cog: {e}")
+        try:
+            await self.load_extension("vezbot.cogs.reminders")
+        except Exception as e:
+            logger.error(f"Failed to load reminders cog: {e}")
+        try:
+            await self.load_extension("vezbot.cogs.admin")
+        except Exception as e:
+            logger.error(f"Failed to load admin cog: {e}")
 
         # Sync commands
         try:
