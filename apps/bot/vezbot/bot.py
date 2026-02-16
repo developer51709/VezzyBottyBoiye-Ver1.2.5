@@ -30,8 +30,6 @@ class Vezbot(commands.Bot):
             help_command=None,
         )
 
-        self.tree = app_commands.CommandTree(self)
-
     async def setup_hook(self) -> None:
         """Called when bot is starting up."""
         logger.info("Setting up bot...")
