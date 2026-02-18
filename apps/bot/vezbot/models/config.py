@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from sqlalchemy import BigInteger, JSON, String
+from sqlalchemy import BigInteger, ForeignKey, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from vezbot.models.base import Base, TimestampMixin
@@ -31,7 +31,7 @@ class GuildBrand(Base, TimestampMixin):
     __tablename__ = "guild_brands"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    guild_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False)
+    guild_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("guilds.id"), unique=True, nullable=False)
     display_name: Mapped[str] = mapped_column(String(255), nullable=False)
     short_name: Mapped[str] = mapped_column(String(100), nullable=False)
     icon_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
