@@ -1,5 +1,7 @@
 """Database connection and session management."""
 
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base
 
@@ -9,11 +11,30 @@ from vezbot.utils.logging import get_logger, get_correlation_id, set_correlation
 
 logger = get_logger(__name__)
 
-# Create async engine
+
+def _prepare_database_url(url: str) -> tuple[str, dict]:
+    url = url.replace("postgresql://", "postgresql+asyncpg://")
+    parsed = urlparse(url)
+    params = parse_qs(parsed.query)
+
+    connect_args = {}
+    if "sslmode" in params:
+        ssl_value = params.pop("sslmode")[0]
+        if ssl_value == "disable":
+            connect_args["ssl"] = False
+
+    clean_query = urlencode({k: v[0] for k, v in params.items()})
+    clean_url = urlunparse(parsed._replace(query=clean_query))
+    return clean_url, connect_args
+
+
+_db_url, _connect_args = _prepare_database_url(settings.database_url)
+
 engine = create_async_engine(
-    settings.database_url.replace("postgresql://", "postgresql+asyncpg://"),
+    _db_url,
     echo=False,
     future=True,
+    connect_args=_connect_args,
 )
 
 # Session factory

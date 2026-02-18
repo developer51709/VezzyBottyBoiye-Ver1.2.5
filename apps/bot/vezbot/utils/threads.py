@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING
 
 import discord
-from discord import ThreadType
+from discord import ChannelType
 
 from vezbot.utils.logging import get_logger
 
@@ -30,7 +30,7 @@ async def create_ticket_thread(
     try:
         thread = await channel.create_thread(
             name=name,
-            type=ThreadType.private_thread,
+            type=ChannelType.private_thread,
             reason=reason,
         )
         logger.info(
@@ -60,7 +60,7 @@ async def create_ticket_thread(
     try:
         thread = await channel.create_thread(
             name=name,
-            type=ThreadType.public_thread,
+            type=ChannelType.public_thread,
             reason=reason,
         )
 

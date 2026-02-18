@@ -62,7 +62,8 @@ class ChannelSelectView(discord.ui.View):
         self.parent_view = parent_view
         self.step = step
 
-    @discord.ui.channel_select(
+    @discord.ui.select(
+        cls=discord.ui.ChannelSelect,
         placeholder="Select a channel...",
         channel_types=[discord.ChannelType.text],
     )
@@ -135,7 +136,7 @@ class RoleSelectView(discord.ui.View):
         self.cog = cog
         self.parent_view = parent_view
 
-    @discord.ui.role_select(placeholder="Select staff roles...", min_values=1, max_values=10)
+    @discord.ui.select(cls=discord.ui.RoleSelect, placeholder="Select staff roles...", min_values=1, max_values=10)
     async def role_select(
         self, interaction: discord.Interaction, select: discord.ui.RoleSelect
     ) -> None:
