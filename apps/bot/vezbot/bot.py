@@ -29,6 +29,22 @@ class Vezbot(commands.Bot):
             intents=intents,
             help_command=None,
         )
+        self.tree.on_error = self._tree_on_error
+
+    async def _tree_on_error(
+        self, interaction: discord.Interaction, error: app_commands.AppCommandError
+    ) -> None:
+        if isinstance(error, app_commands.CommandNotFound):
+            logger.warning(f"Stale command invoked: {error.name}")
+            try:
+                await interaction.response.send_message(
+                    "This command is no longer available. It may take a moment for Discord to update.",
+                    ephemeral=True,
+                )
+            except discord.errors.NotFound:
+                pass
+            return
+        await self.on_app_command_error(interaction, error)
 
     async def setup_hook(self) -> None:
         """Called when bot is starting up."""
