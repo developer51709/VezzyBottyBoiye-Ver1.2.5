@@ -131,7 +131,6 @@ class Vezbot(commands.Bot):
     async def on_interaction(self, interaction: discord.Interaction) -> None:
         """Set correlation ID for each interaction."""
         set_correlation_id(get_correlation_id())
-        await super().on_interaction(interaction)
 
 
 # Global bot instance
