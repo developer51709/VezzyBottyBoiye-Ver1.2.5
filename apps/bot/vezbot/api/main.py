@@ -15,9 +15,13 @@ logger = get_logger(__name__)
 app = FastAPI(title="Vezbot API")
 
 
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {"service": "vezbot-api", "status": "running"}
+
+
 @app.get("/health")
 async def health() -> dict[str, str]:
-    """Health check endpoint."""
     return {"status": "healthy"}
 
 
